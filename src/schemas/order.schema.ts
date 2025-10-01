@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { CurrencyEnum } from "./_shared";
+import { addressPublicSchema } from "./address.schema";
+import { productPreviewSchema } from "./product.schema";
+import { paymentPublicSchema } from "./payment.schema";
 
 export const OrderStatusEnum = z.enum([
     "pending_payment", "paid", "processing", "shipped", "delivered", "cancelled"
@@ -50,4 +53,29 @@ export const checkoutSchema = z.object({
 // Patch estado admin
 export const patchOrderStatusSchema = z.object({
     status: OrderStatusEnum,
+}).strict();
+
+// Público (respuesta API)
+export const orderItemPublicSchema = z.object({
+  id: z.number().int().positive(),
+  quantity: z.number().int().min(1).max(1_000),
+  unitPriceCents: z.number().int().min(0).max(99_999_999),
+  product: productPreviewSchema,
+}).strict();
+
+export const orderPublicSchema = z.object({
+  id: z.number().int().positive(),
+  userId: z.number().int().positive(),
+  cartId: z.number().int().positive(),
+  status: OrderStatusEnum,
+  currency: CurrencyEnum,
+  totalCents: z.number().int().min(0).max(999_999_999),
+  shippingMethod: ShippingMethodEnum,
+  shippingCostCents: z.number().int().min(0).max(99_999_999),
+  shippingAddress: addressPublicSchema.nullable().optional(),
+  billingAddress: addressPublicSchema.nullable().optional(),
+  items: z.array(orderItemPublicSchema).default([]),
+  payments: z.array(paymentPublicSchema).default([]),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
 }).strict();

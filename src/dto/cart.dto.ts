@@ -4,6 +4,9 @@ import {
     cartItemEntitySchema,
     addCartItemSchema,
     updateCartItemSchema,
+    cartPublicSchema,
+    cartItemPublicSchema,
+    cartTotalsSchema,
 } from "../schemas/cart.schema";
 import { idParamSchema } from "../schemas/_shared";
 
@@ -13,3 +16,6 @@ export type CartAddItemDto = zInfer<typeof addCartItemSchema>;
 export type CartUpdateItemDto = zInfer<typeof updateCartItemSchema>;
 export type CartIdParam = zInfer<typeof idParamSchema>;
 export type CartItemIdParam = zInfer<typeof idParamSchema>;
+export type CartPublicDto = zInfer<typeof cartPublicSchema>;
+export type CartItemPublicDto = zInfer<typeof cartItemPublicSchema>;
+export type CartTotalsDto = zInfer<typeof cartTotalsSchema>;

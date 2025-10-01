@@ -5,6 +5,7 @@ import {
     skuSchema,           // SKU válido (A-Z, 0-9 y guiones) + normalización
     CurrencyEnum,        // enum de moneda (ej: "ARS", …)
 } from "./_shared";
+import { reviewPublicSchema } from "./review.schema";
 
 // Esquemas auxiliares para inputs anidados (ej: imágenes, categorías)
 // Útiles para los schemas de Create/Update (request body)
@@ -109,5 +110,29 @@ export const publicProductSchema = z
     updatedAt: z.string().datetime(),
     images: z.array(productImagePublicSchema).default([]),
     categories: z.array(productCategoryPublicSchema).default([]),
+    // Datos derivados para UI pública
+    primaryImage: productImagePublicSchema.nullable().optional(),
+    averageRating: z.number().min(0).max(5).optional(),
+    reviewsCount: z.number().int().min(0).optional(),
+    reviews: z.array(reviewPublicSchema).optional(),
   })
   .strict();
+
+// ====================================================
+// Preview público reutilizable (para listas, carrito, etc.)
+// ====================================================
+export const productPreviewSchema = z.object({
+  id: z.number().int().positive(),
+  name: z.string().min(1).max(120),
+  slug: slugSchema,
+  priceCents: z.number().int().min(0).max(99_999_999),
+  currency: CurrencyEnum,
+  primaryImage: z
+    .object({
+      id: z.number().int().positive(),
+      url: z.string().url(),
+      alt: z.string().max(300).optional(),
+    })
+    .nullable()
+    .optional(),
+}).strict();

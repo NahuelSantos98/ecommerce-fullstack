@@ -36,3 +36,16 @@ export const webhookBaseSchema = z.object({
     id: z.string().optional(),
     type: z.string().optional(),
 }).passthrough();
+
+// Público (respuesta API)
+export const paymentPublicSchema = z.object({
+  id: z.number().int().positive(),
+  orderId: z.number().int().positive(),
+  provider: PaymentProviderEnum,
+  providerPaymentId: z.string().max(128).nullable().optional(),
+  status: PaymentStatusEnum,
+  amountCents: z.number().int().min(0).max(999_999_999),
+  currency: CurrencyEnum,
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+}).strict();

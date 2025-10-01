@@ -86,3 +86,14 @@ export const userPublicSchema = z
     wishlist: wishlistLightSchema.nullable().optional(), // ← así devolvés {id, createdAt}
   })
   .strict();
+
+// ====================================================
+// Light (uso en relaciones públicas)
+// ====================================================
+export const userLightSchema = z
+  .object({
+    id: z.number().int().positive(),
+    firstName: z.string(),
+    lastName: z.string(),
+  })
+  .strict();
